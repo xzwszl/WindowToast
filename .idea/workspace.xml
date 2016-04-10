@@ -1,13 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
   <component name="ChangeListManager">
-    <list default="true" id="33f6170c-57f6-4039-b261-7dad2fdfbc0f" name="Default" comment="">
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/library/src/main/java/xzw/szl/toast/library/policy/CoverPolicy.java" afterPath="$PROJECT_DIR$/library/src/main/java/xzw/szl/toast/library/policy/CoverPolicy.java" />
+    <list default="true" id="33f6170c-57f6-4039-b261-7dad2fdfbc0f" name="Default" comment="modify WindowToast schema">
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/app/src/main/java/xzw/szl/toast/MyApplication.java" afterPath="$PROJECT_DIR$/app/src/main/java/xzw/szl/toast/MyApplication.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/library/src/main/java/xzw/szl/toast/library/policy/Policy.java" afterPath="$PROJECT_DIR$/library/src/main/java/xzw/szl/toast/library/policy/Policy.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/library/src/main/java/xzw/szl/toast/library/policy/SequencePolicy.java" afterPath="$PROJECT_DIR$/library/src/main/java/xzw/szl/toast/library/policy/SequencePolicy.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/library/src/main/java/xzw/szl/toast/library/WindowToast.java" afterPath="$PROJECT_DIR$/library/src/main/java/xzw/szl/toast/library/WindowToast.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/library/src/main/java/xzw/szl/toast/library/WindowToastConfig.java" afterPath="$PROJECT_DIR$/library/src/main/java/xzw/szl/toast/library/WindowToastConfig.java" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/workspace.xml" afterPath="$PROJECT_DIR$/.idea/workspace.xml" />
     </list>
     <ignored path="WindowToast.iws" />
@@ -32,9 +27,12 @@
       <file leaf-file-name="MyApplication.java" pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/app/src/main/java/xzw/szl/toast/MyApplication.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state vertical-scroll-proportion="0.50176054">
-              <caret line="21" column="5" selection-start-line="21" selection-start-column="5" selection-end-line="21" selection-end-column="5" />
-              <folding />
+            <state vertical-scroll-proportion="0.18485916">
+              <caret line="9" column="25" selection-start-line="9" selection-start-column="25" selection-end-line="9" selection-end-column="25" />
+              <folding>
+                <element signature="e#236#237#0" expanded="true" />
+                <element signature="e#268#269#0" expanded="true" />
+              </folding>
             </state>
           </provider>
         </entry>
@@ -2972,10 +2970,17 @@
       <option name="number" value="Default" />
       <updated>1460046674225</updated>
     </task>
+    <task id="LOCAL-00001" summary="modify WindowToast schema">
+      <created>1460308901169</created>
+      <option name="number" value="00001" />
+      <option name="project" value="LOCAL" />
+      <updated>1460308901169</updated>
+    </task>
+    <option name="localTasksCounter" value="2" />
     <servers />
   </component>
   <component name="ToolWindowManager">
-    <frame x="0" y="23" width="1280" height="712" extended-state="6" />
+    <frame x="0" y="23" width="1280" height="712" extended-state="0" />
     <editor active="true" />
     <layout>
       <window_info id="Palette&#9;" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="2" side_tool="false" content_ui="tabs" />
@@ -3019,6 +3024,10 @@
   </component>
   <component name="VcsContentAnnotationSettings">
     <option name="myLimit" value="2678400000" />
+  </component>
+  <component name="VcsManagerConfiguration">
+    <MESSAGE value="modify WindowToast schema" />
+    <option name="LAST_COMMIT_MESSAGE" value="modify WindowToast schema" />
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager>
@@ -3188,9 +3197,12 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/app/src/main/java/xzw/szl/toast/MyApplication.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.50176054">
-          <caret line="21" column="5" selection-start-line="21" selection-start-column="5" selection-end-line="21" selection-end-column="5" />
-          <folding />
+        <state vertical-scroll-proportion="0.18485916">
+          <caret line="9" column="25" selection-start-line="9" selection-start-column="25" selection-end-line="9" selection-end-column="25" />
+          <folding>
+            <element signature="e#236#237#0" expanded="true" />
+            <element signature="e#268#269#0" expanded="true" />
+          </folding>
         </state>
       </provider>
     </entry>
