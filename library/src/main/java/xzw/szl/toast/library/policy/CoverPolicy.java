@@ -10,6 +10,9 @@ import xzw.szl.toast.library.ToastEvent;
 public class CoverPolicy extends Policy{
 
     public CoverPolicy() {super();}
+    public CoverPolicy(int maxSize, int minSize) {
+        super(maxSize, minSize);
+    }
 
     @Override
     public ToastEvent nextEvent(Queue<ToastEvent> queue) {

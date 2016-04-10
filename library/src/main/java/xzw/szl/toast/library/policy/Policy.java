@@ -9,7 +9,7 @@ import xzw.szl.toast.library.ToastEvent;
  */
 public abstract class Policy {
 
-    private int  maxSize;
+    private int maxSize;
     protected int minSize;
 
     public int getMaxSize() {
@@ -29,6 +29,10 @@ public abstract class Policy {
     }
 
     public Policy() {}
+    public Policy(int maxSize, int minSize) {
+        this.maxSize = maxSize;
+        this.minSize = minSize;
+    }
 
     public abstract ToastEvent nextEvent(Queue<ToastEvent> queue);
 

@@ -1,15 +1,10 @@
 package xzw.szl.toast.library;
 
-/**
- * Created by shilei on 16/4/6.
- */
-
 import android.app.ActivityManager;
 import android.content.ComponentName;
 import android.content.Context;
 import android.graphics.PixelFormat;
 import android.os.Build;
-import android.os.Handler;
 import android.util.Log;
 import android.view.Gravity;
 import android.view.LayoutInflater;
@@ -40,12 +35,12 @@ public abstract class WindowToast<T extends View>{
     private boolean mAdded;
     private Animation mInAnim;
     private Animation mOutAnim;
-    private Handler mHandler;
     private ViewGroup mLayout;
     private Queue<ToastEvent> mQueue;
     private boolean isShowing;
     private Policy mPolicy;
     private ToastEvent mCurEvent;
+    private static WindowToastConfig mConfig;
 
     public static final long DEFAULT_DURATION = 1000;
     protected static WindowToast mWindowToast;
@@ -68,47 +63,52 @@ public abstract class WindowToast<T extends View>{
         mLayout = new FrameLayout(context);
         mManager.addView(mLayout, mLayoutParams);
         mAdded = true;
-        mHandler = new Handler();
         isShowing = false;
         mQueue = new LinkedList<>();
     }
 
-    public void setPolicy(Policy policy) {
+    public WindowToast setPolicy(Policy policy) {
         if (policy == null) {
             throw new NullPointerException("Policy could not be null");
         }
         mPolicy = policy;
+        return this;
     }
 
-    public void setAnimation(int inId, int outId) {
+    public WindowToast setAnimation(int inId, int outId) {
         initAnim(AnimationUtils.loadAnimation(mContext, inId),
                 AnimationUtils.loadAnimation(mContext, outId));
+        return this;
     }
 
-    public void setFadeInAnimation(int inId) {
+    public WindowToast setFadeInAnimation(int inId) {
         mInAnim = AnimationUtils.loadAnimation(mContext,inId);
         mInAnim.setAnimationListener(inAnimListener);
+        return this;
     }
 
-    public void setFadeOutAnimation(int outId) {
+    public WindowToast setFadeOutAnimation(int outId) {
         mOutAnim = AnimationUtils.loadAnimation(mContext, outId);
         mOutAnim.setAnimationListener(outAnimListener);
+        return this;
     }
 
-    public void setFadeInAnimation(Animation animation) {
+    public WindowToast setFadeInAnimation(Animation animation) {
         if (animation == null) {
             throw new NullPointerException("Animation could not be null");
         }
         mInAnim = animation;
         mInAnim.setAnimationListener(inAnimListener);
+        return this;
     }
 
-    public void setFadeOutAnimation(Animation animation) {
+    public WindowToast setFadeOutAnimation(Animation animation) {
         if (animation == null) {
             throw new NullPointerException("Animation could not be null");
         }
         mOutAnim = animation;
         mOutAnim.setAnimationListener(outAnimListener);
+        return this;
     }
 
     private void initAnim(Animation in, Animation out) {
@@ -127,7 +127,7 @@ public abstract class WindowToast<T extends View>{
 
         @Override
         public void onAnimationEnd(Animation animation) {
-            mHandler.postDelayed(hideRunnable, mCurEvent.duration);
+            mLayout.postDelayed(hideRunnable, mCurEvent.duration);
             Log.d("show", "inAnim end");
         }
 
@@ -148,18 +148,14 @@ public abstract class WindowToast<T extends View>{
             Log.d("show", "outAnim end " + mQueue.isEmpty());
             mView.setVisibility(View.GONE);
 
-            if (isAppIsInBackground(mContext)) {
+            if (isAppIsInBackground(mContext) || mQueue.isEmpty()) {
                 mManager.removeViewImmediate(mLayout);
                 mAdded = false;
                 isShowing = false;
                 return;
             }
 
-            if (!mQueue.isEmpty()) {
-                show();
-            } else {
-                isShowing = false;
-            }
+            show();
         }
 
         @Override
@@ -245,46 +241,6 @@ public abstract class WindowToast<T extends View>{
         }
 
         return isInBackground;
-    }
-
-    public void resolveWindowToastConfig() {
-        setFadeInAnimation(WindowToastConfig.getAnimIn());
-        setFadeOutAnimation(WindowToastConfig.getAnimOut());
-        boolean isPolicyOk = false;
-        if (WindowToastConfig.getPolicy() != null) {
-            setPolicy(WindowToastConfig.getPolicy());
-            isPolicyOk = true;
-        } else if (WindowToastConfig.getPolicyName() != null) {
-            try {
-                Class cls = Class.forName(WindowToastConfig.getPolicyName());
-                setPolicy((Policy) cls.newInstance());
-                isPolicyOk = true;
-            } catch (ClassNotFoundException e) {
-                e.printStackTrace();
-                isPolicyOk = false;
-            } catch (InstantiationException e) {
-                e.printStackTrace();
-                isPolicyOk = false;
-            } catch (IllegalAccessException e) {
-                e.printStackTrace();
-                isPolicyOk = false;
-            }
-        }
-
-        if (!isPolicyOk) {
-            if (WindowToastConfig.getCurPolicy() == WindowToastConfig.COVERPOLICY) {
-                setPolicy(new CoverPolicy());
-            } else if (WindowToastConfig.getCurPolicy() == WindowToastConfig.SEQUENCEPOLICY) {
-                setPolicy(new SequencePolicy());
-            } else {
-                setPolicy(null);
-            }
-        }
-
-        mView = (T) LayoutInflater.from(mContext).inflate(WindowToastConfig.getViewId(), null);
-        mView.setVisibility(View.GONE);
-        mPolicy.setMaxSize(WindowToastConfig.getPolicyMaxSize());
-        mPolicy.setMinSize(WindowToastConfig.getPolicyMinSize());
     }
 }
 

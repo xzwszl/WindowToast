@@ -10,6 +10,9 @@ import xzw.szl.toast.library.ToastEvent;
 public class SequencePolicy extends Policy {
 
     public SequencePolicy() {super();}
+    public SequencePolicy(int maxSize, int minSize) {
+        super(maxSize, minSize);
+    }
 
     @Override
     public ToastEvent nextEvent(Queue<ToastEvent> queue) {

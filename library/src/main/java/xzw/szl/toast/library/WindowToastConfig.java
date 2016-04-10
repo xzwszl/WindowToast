@@ -1,5 +1,13 @@
 package xzw.szl.toast.library;
 
+import android.content.Context;
+import android.view.Gravity;
+import android.view.LayoutInflater;
+import android.view.View;
+import android.view.animation.Animation;
+import android.view.animation.AnimationUtils;
+
+import xzw.szl.toast.library.policy.CoverPolicy;
 import xzw.szl.toast.library.policy.Policy;
 
 /**
@@ -7,111 +15,152 @@ import xzw.szl.toast.library.policy.Policy;
  */
 public class WindowToastConfig {
     private static WindowToastConfig config;
-    private WindowToastConfig() {}
-
-    public static final int COVERPOLICY = 1;
-    public static final int SEQUENCEPOLICY = 2;
-    public static final int UNKNOWNPOLICY = 3;
-    public static int curPolicy = 1;
-    private static int animIn;
-    private static int animOut;
-    private static String policyName;
-    private static int policyMinSize = 1;
-    private static int policyMaxSize = 100;
-    private static Policy mPolicy;
-    private static int viewId;
-
-
-    public static int getViewId() {
-        return viewId;
+    private WindowToastConfig() {
+        mGravity = Gravity.TOP;
     }
 
-    public static WindowToastConfig configViewId(int viewId) {
-        if (config == null) {
-            config = new WindowToastConfig();
-        }
-        WindowToastConfig.viewId = viewId;
-        return config;
+    private View mView;
+    private Animation mFadeIn;
+    private Animation mFadeOut;
+    private Policy mPolicy;
+    private int mGravity;
+
+    public Class<WindowToast> getSubClass() {
+        return mSubClass;
     }
 
-    public static int getCurPolicy() {
-        return curPolicy;
+    public void setSubClass(Class<WindowToast> subClass) {
+        mSubClass = subClass;
     }
 
-    public static WindowToastConfig configCurPolicy(int policy) {
-        if (config == null) {
-            config = new WindowToastConfig();
-        }
-        curPolicy = policy;
-        return config;
+    private Class<WindowToast> mSubClass;
+
+
+    public int getGravity() {
+        return mGravity;
     }
 
-    public static int getAnimIn() {
-        return animIn;
+    public void setGravity(int gravity) {
+        this.mGravity = mGravity;
     }
 
-    public static WindowToastConfig configAnimIn(int animIn) {
-        if (config == null) {
-            config = new WindowToastConfig();
-        }
-        WindowToastConfig.animIn = animIn;
-        return config;
+    public View getView() {
+        return mView;
     }
 
-    public static int getAnimOut() {
-        return animOut;
+    public void setView(View view) {
+        this.mView = mView;
     }
 
-    public static WindowToastConfig configAnimOut(int animOut) {
-        if (config == null) {
-            config = new WindowToastConfig();
-        }
-        WindowToastConfig.animOut = animOut;
-        return config;
-    }
-
-    public static String getPolicyName() {
-        return policyName;
-    }
-
-    public static int getPolicyMinSize() {
-        return policyMinSize;
-    }
-
-    public static WindowToastConfig configPolicyMinSize(int policyMinSize) {
-        if (policyMinSize < 1) throw  new IllegalArgumentException("MinSize should be 1 at least");
-
-        if (config == null) {
-            config = new WindowToastConfig();
-        }
-        WindowToastConfig.policyMinSize = policyMinSize;
-        return config;
-    }
-
-    public static int getPolicyMaxSize() {
-        return policyMaxSize;
-    }
-
-    public static WindowToastConfig configPolicyMaxSize(int policyMaxSize) {
-        if (policyMaxSize < 1) throw  new IllegalArgumentException("MaxSize should be 1 at least");
-        if (config == null) {
-            config = new WindowToastConfig();
-        }
-        WindowToastConfig.policyMaxSize = policyMaxSize;
-        return config;
-    }
-
-    public static WindowToastConfig configPolicy(Policy policy) {
-        if (config == null) {
-            config = new WindowToastConfig();
-        }
-        if (policy == null) throw new NullPointerException("Policy could not be null");
-        mPolicy = policy;
-        policyName = policy.getClass().getName();
-        return config;
-    }
-
-    public static Policy getPolicy() {
+    public Policy getPolicy() {
         return mPolicy;
+    }
+
+    public void setPolicy(Policy mPolicy) {
+        this.mPolicy = mPolicy;
+    }
+
+    public Animation getFadeOut() {
+        return mFadeOut;
+    }
+
+    public void setFadeOut(Animation mFadeOut) {
+        this.mFadeOut = mFadeOut;
+    }
+
+    public Animation getFadeIn() {
+        return mFadeIn;
+    }
+
+    public void setFadeIn(Animation mFadeIn) {
+        this.mFadeIn = mFadeIn;
+    }
+
+    public static class Builder {
+
+        private Context mContext;
+        private WindowToastConfig config;
+        public Builder(Context context) {
+            mContext = context;
+            config = new WindowToastConfig();
+        }
+
+        private Builder(){}
+
+        public Builder animationIn(int animIn) {
+            Animation animation = AnimationUtils.loadAnimation(mContext, animIn);
+            animationIn(animation);
+            return this;
+        }
+
+        public Builder animationIn(Animation animation) {
+            config.setFadeIn(animation);
+            return this;
+        }
+
+        public Builder animationOut(int animOut) {
+            Animation animation = AnimationUtils.loadAnimation(mContext, animOut);
+            animationOut(animation);
+            return this;
+        }
+
+        public Builder animationOut(Animation animation) {
+            config.setFadeOut(animation);
+            return this;
+        }
+
+        public Builder policy(Policy policy) {
+            config.setPolicy(policy);
+            return this;
+        }
+
+        public Builder contentView(int layoutId) {
+            View view = LayoutInflater.from(mContext).inflate(layoutId, null);
+            contentView(view);
+            return this;
+        }
+
+        public Builder contentView(View view) {
+            config.setView(view);
+            return this;
+        }
+
+        public Builder subToastClass(Class<WindowToast> cls) {
+            config.setSubClass(cls);
+            return this;
+        }
+
+        /**
+         * gravity like GRAVITY.TOP
+         * */
+        public Builder gravity(int gravity) {
+            config.setGravity(gravity);
+            return this;
+        }
+
+        public WindowToastConfig build() {
+
+            if (config.getFadeIn() == null) {
+                throw new IllegalStateException("FadeIn animation should be initialized");
+            }
+
+            if (config.getFadeOut() == null) {
+                throw new IllegalStateException("FadeOut animation should be initialized");
+            }
+
+            if (config.getView() == null) {
+                throw new IllegalStateException("Layout should be initialized");
+            }
+
+            if (config.getSubClass() == null) {
+                throw new IllegalStateException("Toast subClass should be initialized");
+            }
+
+            if (config.getPolicy() == null) {
+                config.setPolicy(new CoverPolicy());
+            }
+
+            return config;
+        }
     }
 }
