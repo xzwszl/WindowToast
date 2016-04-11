@@ -7,21 +7,18 @@ import android.graphics.PixelFormat;
 import android.os.Build;
 import android.util.Log;
 import android.view.Gravity;
-import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.WindowManager;
 import android.view.animation.Animation;
-import android.view.animation.AnimationUtils;
 import android.widget.FrameLayout;
+import android.widget.TextView;
 
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Queue;
 
-import xzw.szl.toast.library.policy.CoverPolicy;
 import xzw.szl.toast.library.policy.Policy;
-import xzw.szl.toast.library.policy.SequencePolicy;
 
 /**
  * Created by shilei on 16/4/5.
@@ -33,8 +30,6 @@ public abstract class WindowToast<T extends View>{
     private Context mContext;
     private WindowManager mManager;
     private boolean mAdded;
-    private Animation mInAnim;
-    private Animation mOutAnim;
     private ViewGroup mLayout;
     private Queue<ToastEvent> mQueue;
     private boolean isShowing;
@@ -67,6 +62,12 @@ public abstract class WindowToast<T extends View>{
         mQueue = new LinkedList<>();
     }
 
+    public static void config(WindowToastConfig config) {
+        mConfig = config;
+    }
+
+
+
     public WindowToast setPolicy(Policy policy) {
         if (policy == null) {
             throw new NullPointerException("Policy could not be null");
@@ -75,47 +76,47 @@ public abstract class WindowToast<T extends View>{
         return this;
     }
 
-    public WindowToast setAnimation(int inId, int outId) {
-        initAnim(AnimationUtils.loadAnimation(mContext, inId),
-                AnimationUtils.loadAnimation(mContext, outId));
-        return this;
+    public static void showToast(Context context, CharSequence sequence) {
+        showToast(context, sequence, DEFAULT_DURATION);
     }
 
-    public WindowToast setFadeInAnimation(int inId) {
-        mInAnim = AnimationUtils.loadAnimation(mContext,inId);
-        mInAnim.setAnimationListener(inAnimListener);
-        return this;
-    }
-
-    public WindowToast setFadeOutAnimation(int outId) {
-        mOutAnim = AnimationUtils.loadAnimation(mContext, outId);
-        mOutAnim.setAnimationListener(outAnimListener);
-        return this;
-    }
-
-    public WindowToast setFadeInAnimation(Animation animation) {
-        if (animation == null) {
-            throw new NullPointerException("Animation could not be null");
+    public static void showToast(Context context, CharSequence sequence, long duration) {
+        Log.d("show", "showToast");
+        if (sequence == null) {
+            throw new NullPointerException("CharSequence could not be null");
         }
-        mInAnim = animation;
-        mInAnim.setAnimationListener(inAnimListener);
-        return this;
-    }
 
-    public WindowToast setFadeOutAnimation(Animation animation) {
-        if (animation == null) {
-            throw new NullPointerException("Animation could not be null");
+        if (duration <= 0) {
+            throw new IllegalArgumentException("duration must be bigger than 0");
         }
-        mOutAnim = animation;
-        mOutAnim.setAnimationListener(outAnimListener);
-        return this;
-    }
 
-    private void initAnim(Animation in, Animation out) {
-        mInAnim = in;
-        mOutAnim = out;
-        mInAnim.setAnimationListener(inAnimListener);
-        mOutAnim.setAnimationListener(outAnimListener);
+        if (mConfig == null) {
+            throw new IllegalStateException("Config could not be null");
+        }
+
+        if (!(mConfig.getView() instanceof TextView)) {
+            throw new IllegalStateException("Config could not be null");
+        }
+
+        if (mWindowToast == null) {
+            if (mConfig == null) {
+                throw new IllegalStateException("Config could not be null");
+            }
+            try {
+                mWindowToast = (WindowToast) mConfig.getSubClass().newInstance();
+            } catch (InstantiationException e) {
+                e.printStackTrace();
+                throw new IllegalStateException("SubClass could not be created");
+            } catch (IllegalAccessException e) {
+                e.printStackTrace();
+                throw new IllegalStateException("SubClass could not be created");
+            }
+        }
+
+        ToastEvent<CharSequence> event = new ToastEvent<>();
+        event.content = sequence;
+        event.duration = duration;
+        mWindowToast.enqueueEvent(event);
     }
 
 
@@ -187,7 +188,7 @@ public abstract class WindowToast<T extends View>{
         mCurEvent = mPolicy.nextEvent(mQueue);
         resolveToastEvent(mCurEvent);
         mView.setVisibility(View.VISIBLE);
-        mView.startAnimation(mInAnim);
+        mView.startAnimation(mConfig.getFadeIn());
         mAdded = true;
         isShowing = true;
     }
@@ -197,7 +198,7 @@ public abstract class WindowToast<T extends View>{
     public void hide() {
         if (mAdded) {
             mView.clearAnimation();
-            mView.startAnimation(mOutAnim);
+            mView.startAnimation(mConfig.getFadeOut());
         }
     }
     public boolean isAdded() {

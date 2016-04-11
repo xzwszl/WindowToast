@@ -18,29 +18,4 @@ public class SimpleWindowToast extends WindowToast<TextView> {
         }
         mView.setText((CharSequence) event.content);
     }
-
-    public static void showToast(Context context, CharSequence sequence) {
-        showToast(context, sequence, DEFAULT_DURATION);
-    }
-
-    public static void showToast(Context context, CharSequence sequence, long duration) {
-        Log.d("show", "showToast");
-        if (sequence == null) {
-            throw new NullPointerException("CharSequence could not be null");
-        }
-
-        if (duration <= 0) {
-            throw new IllegalArgumentException("duration must be bigger than 0");
-        }
-
-        if (mWindowToast == null) {
-            mWindowToast = new SimpleWindowToast(context);
-            mWindowToast.resolveWindowToastConfig();
-        }
-
-        ToastEvent<CharSequence> event = new ToastEvent<>();
-        event.content = sequence;
-        event.duration = duration;
-        mWindowToast.enqueueEvent(event);
-    }
 }

@@ -15,6 +15,7 @@ import xzw.szl.toast.library.policy.Policy;
  */
 public class WindowToastConfig {
     private static WindowToastConfig config;
+
     private WindowToastConfig() {
         mGravity = Gravity.TOP;
     }
@@ -25,15 +26,15 @@ public class WindowToastConfig {
     private Policy mPolicy;
     private int mGravity;
 
-    public Class<WindowToast> getSubClass() {
+    public Class<?> getSubClass() {
         return mSubClass;
     }
 
-    public void setSubClass(Class<WindowToast> subClass) {
+    public void setSubClass(Class<?> subClass) {
         mSubClass = subClass;
     }
 
-    private Class<WindowToast> mSubClass;
+    private Class<?> mSubClass;
 
 
     public int getGravity() {
@@ -125,7 +126,7 @@ public class WindowToastConfig {
             return this;
         }
 
-        public Builder subToastClass(Class<WindowToast> cls) {
+        public Builder subToastClass(Class<?> cls) {
             config.setSubClass(cls);
             return this;
         }

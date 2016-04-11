@@ -5,6 +5,7 @@ import android.os.Bundle;
 import android.view.View;
 
 import xzw.szl.toast.library.SimpleWindowToast;
+import xzw.szl.toast.library.WindowToast;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -18,7 +19,7 @@ public class MainActivity extends AppCompatActivity {
         findViewById(R.id.button).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                SimpleWindowToast.showToast(getApplicationContext(), "I have click " + (++count) + " time(s)");
+                WindowToast.showToast(getApplicationContext(), "I have click " + (++count) + " time(s)");
             }
         });
     }
